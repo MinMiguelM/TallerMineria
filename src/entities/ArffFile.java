@@ -47,8 +47,7 @@ public class ArffFile {
     public List< Map.Entry< String , Integer> > findPseudoIdentifiers( List<Integer> attributes ){
         HashMap< String , Integer > map = new HashMap<>();
         for( Integer attribute : attributes ) {
-           map.put( attribute + "" , findPseudoIdentifiersByAttrinute( attribute ).size() )
-           .putAll( ); // OJO Preguntar si se puede asumir que entre atributos no hay valores repetidos
+           map.put( attribute + "" , findPseudoIdentifiersByAttrinute( attribute ).size() );
         }
         List< Map.Entry< String , Integer > > list = new ArrayList<>( map.entrySet() );
         return list;
