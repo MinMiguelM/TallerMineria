@@ -5,9 +5,12 @@
  */
 package tallermineria;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import weka.core.Instances;
+import entities.ArffFile;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -19,19 +22,14 @@ public class TallerMineria {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
-        try(
-            BufferedReader bf = new BufferedReader(new FileReader("VTargetMailWEKA.arff"));  
-        ){
-            Instances data = new Instances(bf);
-            for (int i = 0; i < data.numInstances(); i++) {
-                System.out.println((data.instance(i).classAttribute()));
-                
-            }
-        }catch(Exception e){
-            e.printStackTrace();
+        try {
+            ArffFile arff = ArffFile.construct( "bank.arff" );
+            List< Map.Entry< String, Integer > > map = arff.findPseudoIdentifiers(  Arrays.asList( 1 , 2 , 3 ) );
+            System.out.println("mapa " + map);
+        } catch (Exception ex) {
+            Logger.getLogger(TallerMineria.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
-    
+
 }
