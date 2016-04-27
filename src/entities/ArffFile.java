@@ -14,8 +14,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import tallermineria.EntryComparator;
+import weka.core.Attribute;
+import weka.core.FastVector;
+import weka.filters.Filter;
 import weka.core.Instances;
+import weka.filters.unsupervised.attribute.NominalToString;
+import weka.filters.unsupervised.attribute.NumericToNominal;
 
 /**
  *
@@ -53,6 +57,56 @@ public class ArffFile {
         return list;
     }   
     
+    public void imprimir(int attribute){
+        for ( int i = 0; i < instances.numInstances(); i++ )
+                System.out.println(instances.instance( i ).toString( attribute ));
+    }
+    
+    public void generalizar(int attribute , int n) throws Exception{
+        System.out.println(instances.attribute(attribute).type() == weka.core.Attribute.NOMINAL);
+        if (instances.attribute(attribute).type()==weka.core.Attribute.NUMERIC){
+            System.out.println("Es numerico");
+            NumericToNominal numeric = new NumericToNominal();
+            String[] options= new String[2];
+            options[0]="-A";
+            options[1]= attribute+"";
+            numeric.setOptions(options);
+            numeric.setInputFormat(instances);
+            instances = Filter.useFilter(instances,numeric);
+            /*NominalToString string = new NominalToString();
+            options[0] = "-A";
+            options[1]= attribute+"";
+            string.setOptions(options);
+            string.setInputFormat(instances);
+            instances = Filter.useFilter(instances,string);*/
+        }
+        
+        System.out.println(instances.attribute(attribute).isString()); 
+        FastVector values = new FastVector();
+        
+        for (int i = 0; i < instances.numInstances(); i++) {
+            String value = instances.instance( i ).toString(attribute);
+            int n2 = n;
+            char [] copy = value.toCharArray();
+            //System.out.println(copy);
+            while (n2 != 0){
+                copy[copy.length - n2 ] = 'l';
+                n2--;
+            }
+            System.out.println("hola");
+            //System.out.println(instances.instance(i).toString(attribute));
+            String newValue = new String(copy);
+            //System.out.println(newValue);
+            //System.out.println(instances.instance( i ).toString(attribute));
+            //instances.instance(i).attribute(attribute).addStringValue(newValue);
+            //instances.instance(i).setValue(attribute, newValue);
+        
+            //System.out.println();
+            values.addElement( newValue );
+        }
+        instances.insertAttributeAt( new Attribute("jasjda", values) , instances.numAttributes() );
+        instances.toString();
+    }
    
     private HashMap< String , Integer > findPseudoIdentifiersByAttrinute( int attribute ){
          HashMap< String , Integer > map = new HashMap<>();
