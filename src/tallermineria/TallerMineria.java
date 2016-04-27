@@ -25,6 +25,7 @@ public class TallerMineria {
         try {
             ArffFile arff = ArffFile.construct( "bank.arff" );
             List< Map.Entry< String, Integer > > map = arff.findPseudoIdentifiers(  Arrays.asList( 1 , 2 , 3 ) );
+            arff.generalizar(0, 2);
             System.out.println("mapa " + map);
         } catch (Exception ex) {
             Logger.getLogger(TallerMineria.class.getName()).log(Level.SEVERE, null, ex);
