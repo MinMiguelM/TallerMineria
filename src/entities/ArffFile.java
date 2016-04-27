@@ -6,7 +6,9 @@
 package entities;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -14,10 +16,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import weka.core.Attribute;
 import weka.core.FastVector;
+import weka.core.Instance;
 import weka.filters.Filter;
 import weka.core.Instances;
+import weka.core.converters.ArffSaver;
 import weka.filters.unsupervised.attribute.NominalToString;
 import weka.filters.unsupervised.attribute.NumericToNominal;
 
@@ -62,8 +68,15 @@ public class ArffFile {
                 System.out.println(instances.instance( i ).toString( attribute ));
     }
     
+    /**
+     * Generaliza el atributo  especificado en la variable attribute
+     * segun la variable n. Aca se evalua si el atributo es numerico para
+     * convertirlo a nominal
+     * @param attribute
+     * @param n
+     * @throws Exception 
+     */
     public void generalizar(int attribute , int n) throws Exception{
-        System.out.println(instances.attribute(attribute).type() == weka.core.Attribute.NOMINAL);
         if (instances.attribute(attribute).type()==weka.core.Attribute.NUMERIC){
             System.out.println("Es numerico");
             NumericToNominal numeric = new NumericToNominal();
@@ -73,41 +86,47 @@ public class ArffFile {
             numeric.setOptions(options);
             numeric.setInputFormat(instances);
             instances = Filter.useFilter(instances,numeric);
-            /*NominalToString string = new NominalToString();
-            options[0] = "-A";
-            options[1]= attribute+"";
-            string.setOptions(options);
-            string.setInputFormat(instances);
-            instances = Filter.useFilter(instances,string);*/
         }
-        
-        System.out.println(instances.attribute(attribute).isString()); 
         FastVector values = new FastVector();
-        
+        List<String> newValues = new ArrayList<>();
         for (int i = 0; i < instances.numInstances(); i++) {
             String value = instances.instance( i ).toString(attribute);
             int n2 = n;
             char [] copy = value.toCharArray();
-            //System.out.println(copy);
             while (n2 != 0){
-                copy[copy.length - n2 ] = 'l';
+                copy[copy.length - n2 ] = '*';
                 n2--;
             }
-            System.out.println("hola");
-            //System.out.println(instances.instance(i).toString(attribute));
             String newValue = new String(copy);
-            //System.out.println(newValue);
-            //System.out.println(instances.instance( i ).toString(attribute));
-            //instances.instance(i).attribute(attribute).addStringValue(newValue);
-            //instances.instance(i).setValue(attribute, newValue);
-        
-            //System.out.println();
-            values.addElement( newValue );
+            if(!values.contains(newValue))
+                values.addElement( new String(copy) );
+            newValues.add(newValue);
         }
-        instances.insertAttributeAt( new Attribute("jasjda", values) , instances.numAttributes() );
-        instances.toString();
+        String oldName = new String(instances.attribute(attribute).name());
+        instances.deleteAttributeAt(attribute);
+        instances.insertAttributeAt( new Attribute(oldName, values) , instances.numAttributes() );
+        for (int i = 0; i < instances.numInstances(); i++) {
+            instances.instance(i).setValue(instances.numAttributes()-1, newValues.get(i));
+        }
+        saveToFile(3);
     }
-   
+    
+    /**
+     * Salva las instancias que se encuentren en instances en un
+     * archivo arff
+     * @param filterNumber 
+     */
+    private void saveToFile(int filterNumber){
+        try {
+            ArffSaver saver = new ArffSaver();
+            saver.setInstances(instances);
+            saver.setFile(new File("filter"+filterNumber+".arff"));
+            saver.writeBatch();
+        } catch (IOException ex) {
+            Logger.getLogger(ArffFile.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     private HashMap< String , Integer > findPseudoIdentifiersByAttrinute( int attribute ){
          HashMap< String , Integer > map = new HashMap<>();
          for ( int i = 0; i < instances.numInstances(); i++ ) {
