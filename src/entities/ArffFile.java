@@ -117,21 +117,29 @@ public class ArffFile {
         instancesFilter = new Instances(instances);
         SimpleKMeans kMeans;
         kMeans = new SimpleKMeans();
-        try {
-            kMeans.setNumClusters(numCluster);
-            kMeans.setMaxIterations(maxIterations);
-            kMeans.setSeed(seed);
-            kMeans.setDisplayStdDevs(false);
-            kMeans.setDistanceFunction(df);
-            kMeans.setDontReplaceMissingValues(replaceMissingValues);
-            kMeans.setPreserveInstancesOrder(preserveInstancesOrder);
-            kMeans.buildClusterer(instancesFilter);
-            System.out.println(kMeans.clusterInstance(instancesFilter.instance(2)));
-            System.out.println(kMeans.getClusterCentroids().instance(0));
-            System.out.println(kMeans.getClusterCentroids().instance(1));
-            System.out.println(kMeans.getClusterCentroids().instance(2));
-        } catch (Exception ex) {
-            Logger.getLogger(ArffFile.class.getName()).log(Level.SEVERE, null, ex);
+        for (Integer attribute : attributes) {
+            String name = new String(instances.attribute(attribute).name());
+            for (int i = 0; i < instancesFilter.numAttributes(); i++) {
+                if(name.equals(instancesFilter.attribute(attribute).name()))
+                    instancesFilter.deleteAttributeAt(i);
+            }
+            try {
+                kMeans.setNumClusters(numCluster);
+                kMeans.setMaxIterations(maxIterations);
+                kMeans.setSeed(seed);
+                kMeans.setDisplayStdDevs(false);
+                kMeans.setDistanceFunction(df);
+                kMeans.setDontReplaceMissingValues(replaceMissingValues);
+                kMeans.setPreserveInstancesOrder(preserveInstancesOrder);
+                kMeans.buildClusterer(instancesFilter);
+                instancesFilter.deleteAttributeAt(seed);
+                System.out.println(kMeans.clusterInstance(instancesFilter.instance(2)));
+                System.out.println(kMeans.getClusterCentroids().instance(0));
+                System.out.println(kMeans.getClusterCentroids().instance(1));
+                System.out.println(kMeans.getClusterCentroids().instance(2));
+            } catch (Exception ex) {
+                Logger.getLogger(ArffFile.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
     
