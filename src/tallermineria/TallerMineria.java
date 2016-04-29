@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import weka.core.DistanceFunction;
 
 /**
  *
@@ -25,8 +26,8 @@ public class TallerMineria {
         try {
             ArffFile arff = ArffFile.construct( "bank.arff" );
             List< Map.Entry< String, Integer > > map = arff.findPseudoIdentifiers(  Arrays.asList( 1 , 2 , 3 ) );
-            arff.generalizar(1, 1);
-            
+            //arff.generalizar(1, 1);
+            arff.microAgregacion(new weka.core.EuclideanDistance(), 3, 10, 500, false, false, Arrays.asList(1));
             System.out.println("mapa " + map);
         } catch (Exception ex) {
             Logger.getLogger(TallerMineria.class.getName()).log(Level.SEVERE, null, ex);

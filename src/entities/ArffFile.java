@@ -18,7 +18,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import weka.clusterers.SimpleKMeans;
 import weka.core.Attribute;
+import weka.core.DistanceFunction;
 import weka.core.FastVector;
 import weka.core.Instance;
 import weka.filters.Filter;
@@ -109,6 +111,28 @@ public class ArffFile {
             instances.instance(i).setValue(instances.numAttributes()-1, newValues.get(i));
         }
         saveToFile(3);
+    }
+    
+    public void microAgregacion(DistanceFunction df, int numCluster, int seed, int maxIterations, 
+            boolean replaceMissingValues, boolean preserveInstancesOrder, List<Integer> attributes){
+        SimpleKMeans kMeans;
+        kMeans = new SimpleKMeans();
+        try {
+            kMeans.setNumClusters(numCluster);
+            kMeans.setMaxIterations(maxIterations);
+            kMeans.setSeed(seed);
+            kMeans.setDisplayStdDevs(false);
+            kMeans.setDistanceFunction(df);
+            kMeans.setDontReplaceMissingValues(replaceMissingValues);
+            kMeans.setPreserveInstancesOrder(preserveInstancesOrder);
+            kMeans.buildClusterer(instances);
+            System.out.println(kMeans.clusterInstance(instances.instance(2)));
+            System.out.println(kMeans.getClusterCentroids().instance(0));
+            System.out.println(kMeans.getClusterCentroids().instance(1));
+            System.out.println(kMeans.getClusterCentroids().instance(2));
+        } catch (Exception ex) {
+            Logger.getLogger(ArffFile.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     /**
