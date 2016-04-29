@@ -1,0 +1,12 @@
+TOWN
+	GASEOSA
+		Bebida
+PEPSI
+	RURAL
+		Bebida
+Pepsi
+	GASEOSA
+		INNER_CITY
+SUBURBAN
+	GASEOSA
+		Bebida
