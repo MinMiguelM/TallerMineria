@@ -18,7 +18,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import weka.clusterers.SimpleKMeans;
 import weka.core.Attribute;
+import weka.core.DistanceFunction;
 import weka.core.FastVector;
 import weka.core.Instance;
 import weka.filters.Filter;
@@ -34,6 +36,7 @@ import weka.filters.unsupervised.attribute.NumericToNominal;
 public class ArffFile {
     
     private Instances instances;
+    private Instances instancesFilter;
 
     
     public ArffFile( Instances instance ){
@@ -77,20 +80,18 @@ public class ArffFile {
      * @throws Exception 
      */
     public void generalizar(int attribute , int n) throws Exception{
-        if (instances.attribute(attribute).type()==weka.core.Attribute.NUMERIC){
-            System.out.println("Es numerico");
+        instancesFilter = new Instances(instances);
+        if (instancesFilter.attribute(attribute).type()==weka.core.Attribute.NUMERIC){
             NumericToNominal numeric = new NumericToNominal();
             String[] options= new String[2];
-            options[0]="-A";
-            options[1]= attribute+"";
-            numeric.setOptions(options);
+            numeric.setAttributeIndices((attribute+1)+"");
             numeric.setInputFormat(instances);
-            instances = Filter.useFilter(instances,numeric);
+            instancesFilter = Filter.useFilter(instancesFilter,numeric);
         }
         FastVector values = new FastVector();
         List<String> newValues = new ArrayList<>();
-        for (int i = 0; i < instances.numInstances(); i++) {
-            String value = instances.instance( i ).toString(attribute);
+        for (int i = 0; i < instancesFilter.numInstances(); i++) {
+            String value = instancesFilter.instance( i ).toString(attribute);
             int n2 = n;
             char [] copy = value.toCharArray();
             while (n2 != 0){
@@ -102,13 +103,44 @@ public class ArffFile {
                 values.addElement( new String(copy) );
             newValues.add(newValue);
         }
-        String oldName = new String(instances.attribute(attribute).name());
-        instances.deleteAttributeAt(attribute);
-        instances.insertAttributeAt( new Attribute(oldName, values) , instances.numAttributes() );
-        for (int i = 0; i < instances.numInstances(); i++) {
-            instances.instance(i).setValue(instances.numAttributes()-1, newValues.get(i));
+        String oldName = new String(instancesFilter.attribute(attribute).name());
+        instancesFilter.deleteAttributeAt(attribute);
+        instancesFilter.insertAttributeAt( new Attribute(oldName, values) , instancesFilter.numAttributes() );
+        for (int i = 0; i < instancesFilter.numInstances(); i++) {
+            instancesFilter.instance(i).setValue(instancesFilter.numAttributes()-1, newValues.get(i));
         }
         saveToFile(3);
+    }
+    
+    public void microAgregacion(DistanceFunction df, int numCluster, int seed, int maxIterations, 
+            boolean replaceMissingValues, boolean preserveInstancesOrder, List<Integer> attributes){
+        instancesFilter = new Instances(instances);
+        SimpleKMeans kMeans;
+        kMeans = new SimpleKMeans();
+        for (Integer attribute : attributes) {
+            String name = new String(instances.attribute(attribute).name());
+            for (int i = 0; i < instancesFilter.numAttributes(); i++) {
+                if(name.equals(instancesFilter.attribute(attribute).name()))
+                    instancesFilter.deleteAttributeAt(i);
+            }
+            try {
+                kMeans.setNumClusters(numCluster);
+                kMeans.setMaxIterations(maxIterations);
+                kMeans.setSeed(seed);
+                kMeans.setDisplayStdDevs(false);
+                kMeans.setDistanceFunction(df);
+                kMeans.setDontReplaceMissingValues(replaceMissingValues);
+                kMeans.setPreserveInstancesOrder(preserveInstancesOrder);
+                kMeans.buildClusterer(instancesFilter);
+                instancesFilter.deleteAttributeAt(seed);
+                System.out.println(kMeans.clusterInstance(instancesFilter.instance(2)));
+                System.out.println(kMeans.getClusterCentroids().instance(0));
+                System.out.println(kMeans.getClusterCentroids().instance(1));
+                System.out.println(kMeans.getClusterCentroids().instance(2));
+            } catch (Exception ex) {
+                Logger.getLogger(ArffFile.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
     
     /**
@@ -119,7 +151,7 @@ public class ArffFile {
     private void saveToFile(int filterNumber){
         try {
             ArffSaver saver = new ArffSaver();
-            saver.setInstances(instances);
+            saver.setInstances(instancesFilter);
             saver.setFile(new File("filter"+filterNumber+".arff"));
             saver.writeBatch();
         } catch (IOException ex) {
