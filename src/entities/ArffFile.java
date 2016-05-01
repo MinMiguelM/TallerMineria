@@ -73,8 +73,8 @@ public class ArffFile {
         }
     }
 
-    public ArrayList<Taxonomia> leerTaxonomia() {
-        try (BufferedReader br = new BufferedReader(new FileReader("Taxonomia.txt"))) {
+    public ArrayList<Taxonomia> leerTaxonomia(String archivo) {
+        try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
             String line;
             ArrayList<Taxonomia> taxonomias = new ArrayList<>();
             int indice = -1;
@@ -97,26 +97,41 @@ public class ArffFile {
         return null;
     }
 
-    public void generalizarpunto2(int attribute, int n) {
-
-        ArrayList<Taxonomia> taxonomias = leerTaxonomia();
-        
-        if (instances.attribute(attribute).type() == weka.core.Attribute.NOMINAL) {
-            for (int i = 0; i < instances.numInstances(); i++) {
-                String palabrita=instances.instance(i).toString(attribute);
-                String generalizar=null;
+    public void generalizarpunto2(int attribute, String archivo) throws Exception {
+        instancesFilter = new Instances(instances);
+        ArrayList<Taxonomia> taxonomias = leerTaxonomia(archivo);
+        FastVector values = new FastVector();
+        List<String> newValues = new ArrayList<>();
+        if (instancesFilter.attribute(attribute).type() == weka.core.Attribute.NOMINAL) {
+            for (int i = 0; i < instancesFilter.numInstances(); i++) {
+                String palabrita = instancesFilter.instance(i).toString(attribute);
+                String generalizar = null;
                 for (int j = 0; j < taxonomias.size(); j++) {
-                    String temp=taxonomias.get(j).generalizar(palabrita);
-                    if(temp!=null)
-                    {
-                        generalizar=temp;
+                    String temp = taxonomias.get(j).generalizar(palabrita);
+                    if (temp != null) {
+                        generalizar = temp;
                     }
                 }
+                if (generalizar == null) {
+                    throw new Exception("PALABRA NO ENCONTRADA EN LA TAXONOMÍA: " + palabrita);
+                }
+                if (!values.contains(generalizar)) {
+                    values.addElement(generalizar);
+                }
+                newValues.add(generalizar);
+
                 ///AHORA SI TENGO EL RES
-                
-                
             }
+            String oldName = new String(instancesFilter.attribute(attribute).name());
+            instancesFilter.deleteAttributeAt(attribute);
+            instancesFilter.insertAttributeAt(new Attribute(oldName, values), instancesFilter.numAttributes());
+            for (int i = 0; i < instancesFilter.numInstances(); i++) {
+                instancesFilter.instance(i).setValue(instancesFilter.numAttributes() - 1, newValues.get(i));
+            }
+        } else {
+            throw new Exception("EL ATRIBUTO: " + instancesFilter.attribute(attribute).name() + " NO ES NOMINAL");
         }
+        saveToFile(2);
     }
 
     /**
@@ -294,3 +309,5 @@ public class ArffFile {
         }
     }
 }
+
+
