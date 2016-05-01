@@ -50,7 +50,7 @@ public class Taxonomia {
         {
             if(padre==null)
             {
-                System.out.println("no tiene padre");
+                //System.out.println("no tiene padre");
                 return nombre;
             }
             else

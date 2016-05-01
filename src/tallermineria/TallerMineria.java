@@ -29,7 +29,7 @@ public class TallerMineria {
         //arff.supresor(1);
         //arff.generalizar(0, 2);
          // arff.microAgregacion(new weka.core.EuclideanDistance(), 3, 10, 500, false, false, Arrays.asList(1));
-            arff.generalizarpunto2(2,3);
+            arff.generalizarpunto2(1,"Taxonomia.txt");
             System.out.println("mapa " + map);
         } catch (Exception ex) {
             Logger.getLogger(TallerMineria.class.getName()).log(Level.SEVERE, null, ex);
