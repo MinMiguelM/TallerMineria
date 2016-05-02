@@ -10,24 +10,18 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import weka.clusterers.SimpleKMeans;
 import weka.core.Attribute;
 import weka.core.DistanceFunction;
 import weka.core.FastVector;
-import weka.core.Instance;
 import weka.filters.Filter;
 import weka.core.Instances;
 import weka.core.converters.ArffSaver;
-import weka.filters.unsupervised.attribute.AddCluster;
-import weka.filters.unsupervised.attribute.NominalToString;
 import weka.filters.unsupervised.attribute.NumericToNominal;
 
 /**
@@ -35,10 +29,19 @@ import weka.filters.unsupervised.attribute.NumericToNominal;
  * @author david
  */
 public class ArffFile {
-
+    /**
+     * instancias que represntan el archivo arfff
+     */
     private Instances instances;
+    /**
+     * copia de las intancias a la cual se le aplican los filtrows
+     */
     private Instances instancesFilter;
 
+    /**
+     * crea un nuevo archivo dadas unas isntancias Arfff
+     * @param instance 
+     */
     public ArffFile(Instances instance) {
         this.instances = instance;
     }
@@ -66,13 +69,20 @@ public class ArffFile {
         List< Map.Entry< String, Integer>> list = new ArrayList<>(map.entrySet());
         return list;
     }
-
+    /**
+     * imprime todas las intancias del atributo 
+     * @param attribute 
+     */
     public void imprimir(int attribute) {
         for (int i = 0; i < instances.numInstances(); i++) {
             System.out.println(instances.instance(i).toString(attribute));
         }
     }
-
+    /**
+     * Lee el archivo de taxonomias 
+     * @param archivo, ruta del archivo
+     * @return  lista de taxonomias
+     */
     public ArrayList<Taxonomia> leerTaxonomia(String archivo) {
         try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
             String line;
@@ -96,7 +106,12 @@ public class ArffFile {
         }
         return null;
     }
-
+    /**
+     * generaliza un atributo al valor de la taxonomia
+     * @param attribute, identificador del atributo a seleccionar
+     * @param archivo, ruta del archivo
+     * @throws Exception 
+     */
     public void generalizarpunto2(int attribute, String archivo) throws Exception {
         instancesFilter = new Instances(instances);
         ArrayList<Taxonomia> taxonomias = leerTaxonomia(archivo);
@@ -248,6 +263,10 @@ public class ArffFile {
         }
     }
 
+    /**
+     * filtro que suprime el atributo, todos los valores se vuelven vacio
+     * @param attribute, identificador del atributo a suprimir
+     */
     public void supresor(int attribute) {
         instancesFilter = new Instances(instances);
         FastVector values = new FastVector();
@@ -285,6 +304,11 @@ public class ArffFile {
         }
     }
 
+    /**
+     * cuenta la cantidad de instancias repetidas que que hay dado un atributo
+     * @param attribute, identificador del atributo
+     * @return 
+     */
     private HashMap< String, Integer> findPseudoIdentifiersByAttrinute(int attribute) {
         HashMap< String, Integer> map = new HashMap<>();
         for (int i = 0; i < instances.numInstances(); i++) {
@@ -297,7 +321,12 @@ public class ArffFile {
         }
         return map;
     }
-
+    /**
+     * Builder, crea una nueva isntancia de la clase  apartir de un archovo
+     * @param filename, ruta del archivo
+     * @return Instancia de ArffFile
+     * @throws Exception El archivo no existe o es de un formato inesperado
+     */
     public static ArffFile construct(String filename) throws Exception {
         try (
                 BufferedReader bf = new BufferedReader(new FileReader(filename));) {
