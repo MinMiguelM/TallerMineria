@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import weka.clusterers.SimpleKMeans;
@@ -113,7 +114,7 @@ public class ArffFile {
      * @throws Exception 
      */
     public void generalizarpunto2(int attribute, String archivo) throws Exception {
-        instancesFilter = new Instances(instances);
+        //instancesFilter = new Instances(instances);
         ArrayList<Taxonomia> taxonomias = leerTaxonomia(archivo);
         FastVector values = new FastVector();
         List<String> newValues = new ArrayList<>();
@@ -158,8 +159,8 @@ public class ArffFile {
      * @param n cantidad de digitos a ser reemplazados
      * @throws Exception
      */
-    public void generalizar(int attribute, int n) throws Exception {
-        instancesFilter = new Instances(instances);
+    public boolean generalizar(int attribute, int n) throws Exception {
+        //instancesFilter = new Instances(instances);
         if (instancesFilter.attribute(attribute).type() == weka.core.Attribute.NUMERIC) {
             NumericToNominal numeric = new NumericToNominal();
             numeric.setAttributeIndices((attribute + 1) + "");
@@ -173,7 +174,7 @@ public class ArffFile {
             int n2 = n;
             char[] copy = value.toCharArray();
             if(copy.length < n){
-                throw new Exception("n es mayor a la longitud del atributo");
+                return false;
             }
             while (n2 != 0) {
                 copy[copy.length - n2] = '*';
@@ -192,6 +193,7 @@ public class ArffFile {
             instancesFilter.instance(i).setValue(instancesFilter.numAttributes() - 1, newValues.get(i));
         }
         saveToFile(3);
+        return true;
     }
 
     /**
@@ -207,7 +209,7 @@ public class ArffFile {
      */
     public void microAgregacion(DistanceFunction df, int numCluster, int seed, int maxIterations,
             boolean replaceMissingValues, boolean preserveInstancesOrder, List<Integer> attributes) throws Exception{
-        instancesFilter = new Instances(instances);
+        //instancesFilter = new Instances(instances);
         SimpleKMeans kMeans;
         kMeans = new SimpleKMeans();
         Instances uniqueAttribute;
@@ -268,12 +270,12 @@ public class ArffFile {
      * @param attribute, identificador del atributo a suprimir
      */
     public void supresor(int attribute) {
-        instancesFilter = new Instances(instances);
+        //instancesFilter = new Instances(instances);
         FastVector values = new FastVector();
         List<String> newValues = new ArrayList<>();
         for (int i = 0; i < instancesFilter.numInstances(); i++) {
             String value = instancesFilter.instance(i).toString(attribute);
-            String newValue = new String("Vacio");
+            String newValue = new String("?");
             if (!values.contains(newValue)) {
                 values.addElement(newValue);
             }
@@ -311,8 +313,8 @@ public class ArffFile {
      */
     private HashMap< String, Integer> findPseudoIdentifiersByAttrinute(int attribute) {
         HashMap< String, Integer> map = new HashMap<>();
-        for (int i = 0; i < instances.numInstances(); i++) {
-            String value = instances.instance(i).toString(attribute);
+        for (int i = 0; i < instancesFilter.numInstances(); i++) {
+            String value = instancesFilter.instance(i).toString(attribute);
             if (map.get(value) == null) {
                 map.put(value, 1);
             } else {
@@ -321,6 +323,81 @@ public class ArffFile {
         }
         return map;
     }
+    
+    public void generalizacionSupresion(List<Integer> attributes, int k, Map<Integer,String> attTaxonomia) throws Exception{
+        instancesFilter = new Instances(instances);
+        int numGeneralizar=1;
+        while(!revisionDelK(k, attributes))
+        {
+          
+            List< Map.Entry< String, Integer > > map=findPseudoIdentifiers(attributes);
+            int max=0;
+            String identificadorMax="";
+            for (Map.Entry<String, Integer> map1 : map) {
+                if(map1.getValue()>max)
+                {
+                    max=map1.getValue();
+                    identificadorMax=map1.getKey();
+                }
+            }
+            int idMax=Integer.parseInt(identificadorMax);
+            if (instancesFilter.attribute(idMax).type() == weka.core.Attribute.NUMERIC) 
+            {
+                if(generalizar(idMax,numGeneralizar))
+                    numGeneralizar++;
+                else
+                    supresor(idMax);
+            }
+            else{
+                
+                if (instancesFilter.attribute(idMax).type() == weka.core.Attribute.NOMINAL){
+                    
+                        if(attTaxonomia.containsKey(idMax)){
+                            //MIRAR PRIMERO EL PAPA SINO FUNCIONA ENTONCES CON EL ABUELO PARA EVITAR PERDER INFO
+                            generalizarpunto2(idMax, attTaxonomia.get(idMax));
+                            // try - catch
+                        }
+                        else{
+                               if(generalizar(idMax,numGeneralizar))
+                                   numGeneralizar++;
+                               else
+                                   supresor(idMax);
+                               
+                        }       
+                }
+            }
+        }
+    }
+    
+    public void generalizacionMicroAgregacion(int k, List<Integer> attributes){
+        instancesFilter = new Instances(instances);
+        while(!revisionDelK(k, attributes)){
+            //microAgregacion(null, k, k, k, true, true, attributes);
+            
+        }
+    }
+    
+    public boolean revisionDelK(int k, List<Integer> attributes){
+        Map<String,Integer > map = new HashMap<>();
+        for(int i = 0; i < instancesFilter.numInstances();i++){
+            String pseudos = "";
+            for (Integer attribute : attributes) {
+                pseudos += instancesFilter.instance(i).toString(attribute);
+            }
+            System.out.println(pseudos);
+            if(!map.containsKey(pseudos))
+                map.put(pseudos, 1);
+            else
+                map.put(pseudos,map.get(pseudos)+1);
+        }
+        Set<String> set = map.keySet();
+        for(String s : set){
+            if(map.get(s) < k)
+                return false;
+        }
+        return true;
+    }
+    
     /**
      * Builder, crea una nueva isntancia de la clase  apartir de un archovo
      * @param filename, ruta del archivo
@@ -329,7 +406,7 @@ public class ArffFile {
      */
     public static ArffFile construct(String filename) throws Exception {
         try (
-                BufferedReader bf = new BufferedReader(new FileReader(filename));) {
+            BufferedReader bf = new BufferedReader(new FileReader(filename));) {
             Instances data = new Instances(bf);
             ArffFile arff = new ArffFile(data);
             return arff;
