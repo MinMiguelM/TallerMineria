@@ -24,7 +24,9 @@ public class TallerMineria {
      */
     public static void main(String[] args) {
         try {
-            ArffFile arff = ArffFile.construct( "VTargetMailWEKA.arff" );
+            ArffFile arff = ArffFile.construct( "bank.arff" );
+            System.out.println(arff.revisionDelK(2, Arrays.asList(0,1,2)));
+             
             //List< Map.Entry< String, Integer > > map = arff.findPseudoIdentifiers(  Arrays.asList( 1 , 2 , 3 ) );
             //arff.supresor(0);
             //arff.generalizar(0, 3);
