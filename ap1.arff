@@ -1,0 +1,123 @@
+@relation TargetMail
+@attribute CustomerKey numeric
+@attribute GeographyKey numeric
+@attribute FirstName string
+@attribute MiddleName string
+@attribute LastName string
+@attribute BirthDate date "yyyy-MM-dd"
+@attribute MaritalStatus {M,S}
+@attribute Gender {M,F}
+@attribute EmailAddress string
+@attribute YearlyIncome numeric
+@attribute TotalChildren numeric
+@attribute NumberChildrenAtHome numeric
+@attribute EnglishEducation {Bachelors,"Partial College","High School","Partial High School","Graduate Degree"}
+@attribute EnglishOccupation {Professional,"Clerical","Skilled Manual","Management"}
+@attribute HouseOwnerFlag numeric
+@attribute NumberCarsOwned numeric
+@attribute DateFirstPurchase date "yyyy-MM-dd"
+@attribute CommuteDistance {"5-10 Miles","2-5 Miles","1-2 Miles","0-1 Miles","10+ Miles"}
+@attribute Region {"North America", "Pacific"}
+@attribute Age numeric
+@attribute BikeBuyer {1,0}
+@data
+11000,26,"Jon","V","Yang","1966-04-08",M,M,"jon24@adventure-works.com",90000,2,0,"Bachelors","Professional",1,0,"2005-07-22","1-2 Miles","Pacific",46,1
+11001,37,"Eugene","L","Huang","1965-05-14",S,M,"eugene10@adventure-works.com",60000,3,3,"Bachelors","Professional",0,1,"2005-07-18","0-1 Miles","Pacific",47,1
+11002,31,"Ruben",?,"Torres","1965-08-12",M,M,"ruben35@adventure-works.com",60000,3,3,"Bachelors","Professional",1,1,"2005-07-10","2-5 Miles","Pacific",47,1
+11003,11,"Christy",?,"Zhu","1968-02-15",S,F,"christy12@adventure-works.com",70000,0,0,"Bachelors","Professional",0,1,"2005-07-01","5-10 Miles","Pacific",44,1
+11004,19,"Elizabeth",?,"Johnson","1968-08-08",S,F,"elizabeth5@adventure-works.com",80000,5,5,"Bachelors","Professional",1,4,"2005-07-26","1-2 Miles","Pacific",44,1
+11005,22,"Julio",?,"Ruiz","1965-08-05",S,M,"julio1@adventure-works.com",70000,0,0,"Bachelors","Professional",1,1,"2005-07-02","5-10 Miles","Pacific",47,1
+11006,8,"Janet","G","Alvarez","1965-12-06",S,F,"janet9@adventure-works.com",70000,0,0,"Bachelors","Professional",1,1,"2005-07-27","5-10 Miles","Pacific",46,1
+11007,40,"Marco",?,"Mehta","1964-05-09",M,M,"marco14@adventure-works.com",60000,3,3,"Bachelors","Professional",1,2,"2005-07-12","0-1 Miles","Pacific",48,1
+11008,32,"Rob",?,"Verhoff","1964-07-07",S,F,"rob4@adventure-works.com",60000,4,4,"Bachelors","Professional",1,3,"2005-07-28","10+ Miles","Pacific",48,1
+11009,25,"Shannon","C","Carlson","1964-04-01",S,M,"shannon38@adventure-works.com",70000,0,0,"Bachelors","Professional",0,1,"2005-07-30","5-10 Miles","Pacific",48,1
+11010,22,"Jacquelyn","C","Suarez","1964-02-06",S,F,"jacquelyn20@adventure-works.com",70000,0,0,"Bachelors","Professional",0,1,"2005-07-17","5-10 Miles","Pacific",48,1
+11011,22,"Curtis",?,"Lu","1963-11-04",M,M,"curtis9@adventure-works.com",60000,4,4,"Bachelors","Professional",1,4,"2005-07-02","10+ Miles","Pacific",49,1
+11012,611,"Lauren","M","Walker","1968-01-18",M,F,"lauren41@adventure-works.com",100000,2,0,"Bachelors","Management",1,2,"2007-09-17","1-2 Miles","North America",44,0
+11013,543,"Ian","M","Jenkins","1968-08-06",M,M,"ian47@adventure-works.com",100000,2,0,"Bachelors","Management",1,3,"2007-10-15","0-1 Miles","North America",44,0
+11014,634,"Sydney",?,"Bennett","1968-05-09",S,F,"sydney23@adventure-works.com",100000,3,0,"Bachelors","Management",0,3,"2007-09-24","1-2 Miles","North America",44,0
+11015,301,"Chloe",?,"Young","1979-02-27",S,F,"chloe23@adventure-works.com",30000,0,0,"Partial College","Skilled Manual",0,1,"2007-07-22","5-10 Miles","North America",33,1
+11016,329,"Wyatt","L","Hill","1979-04-28",M,M,"wyatt32@adventure-works.com",30000,0,0,"Partial College","Skilled Manual",1,1,"2007-08-13","5-10 Miles","North America",33,1
+11017,39,"Shannon",?,"Wang","1944-06-26",S,F,"shannon1@adventure-works.com",20000,4,0,"High School","Skilled Manual",1,2,"2005-07-15","5-10 Miles","Pacific",68,1
+11018,32,"Clarence","D","Rai","1944-10-09",S,M,"clarence32@adventure-works.com",30000,2,0,"Partial College","Clerical",1,2,"2005-07-20","5-10 Miles","Pacific",68,1
+11019,52,"Luke","L","Lal","1978-03-07",S,M,"luke18@adventure-works.com",40000,0,0,"High School","Skilled Manual",0,2,"2007-08-16","5-10 Miles","North America",34,0
+11020,53,"Jordan","C","King","1978-09-20",S,M,"jordan73@adventure-works.com",40000,0,0,"High School","Skilled Manual",0,2,"2007-07-02","1-2 Miles","North America",34,1
+11021,536,"Destiny",?,"Wilson","1978-09-03",S,F,"destiny7@adventure-works.com",40000,0,0,"Partial College","Skilled Manual",0,1,"2007-07-27","1-2 Miles","North America",34,1
+11022,609,"Ethan","G","Zhang","1978-10-12",M,M,"ethan20@adventure-works.com",40000,0,0,"Partial College","Skilled Manual",1,1,"2007-07-24","5-10 Miles","North America",34,1
+11023,298,"Seth","M","Edwards","1978-10-11",M,M,"seth46@adventure-works.com",40000,0,0,"Partial College","Skilled Manual",1,1,"2007-08-21","1-2 Miles","North America",34,0
+11024,311,"Russell",?,"Xie","1978-09-17",M,M,"russell7@adventure-works.com",60000,0,0,"Partial College","Skilled Manual",1,2,"2007-12-29","5-10 Miles","North America",34,0
+11025,24,"Alejandro",?,"Beck","1945-12-23",M,M,"alejandro45@adventure-works.com",10000,2,1,"Partial High School","Clerical",1,2,"2005-07-09","1-2 Miles","Pacific",66,1
+11026,4,"Harold",?,"Sai","1946-04-03",S,M,"harold3@adventure-works.com",30000000,10,0,"Partial College","Clerical",0,2,"2005-07-26","1-2 Miles","Pacific",66,1
+11027,40,"Jessie","R","Zhao","1946-12-07",M,M,"jessie16@adventure-works.com",30000,2,0,"Partial College","Clerical",1,2,"2005-07-19","5-10 Miles","Pacific",65,1
+11028,17,"Jill",?,"Jimenez","1946-04-11",M,F,"jill13@adventure-works.com",30000,2,0,"Partial College","Clerical",1,2,"2005-07-29","1-2 Miles","Pacific",66,1
+11029,32,"Jimmy","L","Moreno","1946-12-21",M,M,"jimmy9@adventure-works.com",30000,2,0,"Partial College","Clerical",1,2,"2005-07-22","1-2 Miles","Pacific",65,1
+11030,28,"Bethany","G","Yuan","1947-02-22",M,F,"bethany10@adventure-works.com",10000,2,1,"Partial High School","Clerical",1,2,"2005-08-08","1-2 Miles","Pacific",65,1
+11031,8,"Theresa","G","Ramos","1947-08-22",M,F,"theresa13@adventure-works.com",20000,4,0,"High School","Skilled Manual",1,2,"2005-08-04","1-2 Miles","Pacific",65,1
+11032,35,"Denise",?,"Stone","1947-06-11",M,F,"denise10@adventure-works.com",20000,4,0,"High School","Skilled Manual",1,2,"2005-08-21","1-2 Miles","Pacific",65,1
+11033,9,"Jaime",?,"Nath","1947-09-23",M,M,"jaime41@adventure-works.com",20000,4,0,"High School","Skilled Manual",1,2,"2005-08-18","5-10 Miles","Pacific",65,1
+11034,12,"Ebony",?,"Gonzalez","1947-06-19",M,F,"ebony19@adventure-works.com",20000,4,0,"High School","Skilled Manual",1,2,"2005-08-04","5-10 Miles","Pacific",65,1
+11035,33,"Wendy",?,"Dominguez","1948-02-24",M,F,"wendy12@adventure-works.com",10000,2,1,"Partial High School","Clerical",1,2,"2005-08-09","1-2 Miles","Pacific",64,1
+11036,343,"Jennifer","C","Russell","1978-12-18",M,F,"jennifer93@adventure-works.com",60000,0,0,"Partial College","Skilled Manual",1,2,"2007-07-26","1-2 Miles","North America",33,1
+11037,49,"Chloe","M","Garcia","1977-11-27",S,F,"chloe27@adventure-works.com",40000,0,0,"Partial High School","Clerical",0,2,"2007-07-24","5-10 Miles","North America",34,1
+11038,6,"Diana","F","Hernandez","1948-03-23",M,F,"diana2@adventure-works.com",10000,2,1,"Partial High School","Clerical",1,2,"2005-08-10","5-10 Miles","Pacific",64,1
+11039,19,"Marc","J","Martin","1948-12-17",M,M,"marc3@adventure-works.com",30000,3,0,"Partial College","Clerical",1,2,"2005-08-10","5-10 Miles","Pacific",63,1
+11040,642,"Jesse",?,"Murphy","1977-08-01",M,M,"jesse15@adventure-works.com",30000,0,0,"Partial College","Skilled Manual",1,2,"2007-10-05","1-2 Miles","North America",35,1
+11041,325,"Amanda","M","Carter","1977-10-16",M,F,"amanda53@adventure-works.com",60000,0,0,"Partial College","Skilled Manual",1,2,"2007-07-18","1-2 Miles","North America",35,1
+11042,338,"Megan","J","Sanchez","1977-06-13",M,F,"megan28@adventure-works.com",70000,0,0,"Partial College","Skilled Manual",1,2,"2007-07-25","0-1 Miles","North America",35,1
+11043,325,"Nathan","M","Simmons","1976-02-24",M,M,"nathan11@adventure-works.com",60000,0,0,"Partial College","Skilled Manual",1,2,"2007-11-09","5-10 Miles","North America",36,0
+11044,25,"Adam","L","Flores","1949-05-24",M,M,"adam10@adventure-works.com",20000,2,1,"Partial High School","Clerical",1,2,"2005-08-31","1-2 Miles","Pacific",63,1
+11045,8,"Leonard","G","Nara","1950-05-19",S,M,"leonard18@adventure-works.com",30000,3,0,"High School","Skilled Manual",0,2,"2007-10-12","1-2 Miles","Pacific",62,0
+11046,6,"Christine",?,"Yuan","1950-03-22",M,F,"christine4@adventure-works.com",30000,3,0,"High School","Skilled Manual",1,2,"2005-08-09","5-10 Miles","Pacific",62,1
+11047,34,"Jaclyn","D","Lu","1950-02-27",M,F,"jaclyn12@adventure-works.com",30000,3,0,"High School","Skilled Manual",0,2,"2005-08-06","1-2 Miles","Pacific",62,1
+11048,39,"Jeremy",?,"Powell","1950-11-22",M,M,"jeremy26@adventure-works.com",30000,3,0,"High School","Skilled Manual",1,2,"2005-08-13","5-10 Miles","Pacific",61,1
+11049,307,"Carol","C","Rai","1980-07-18",S,F,"carol8@adventure-works.com",40000,0,0,"Partial High School","Clerical",1,2,"2007-09-10","5-10 Miles","North America",32,0
+11050,31,"Alan",?,"Zheng","1951-09-07",M,M,"alan23@adventure-works.com",30000,3,0,"High School","Skilled Manual",1,2,"2005-08-23","5-10 Miles","Pacific",61,1
+11051,21,"Daniel",?,"Johnson","1951-08-04",S,M,"daniel18@adventure-works.com",30000,3,0,"High School","Skilled Manual",0,2,"2008-07-01","1-2 Miles","Pacific",61,0
+11052,8,"Heidi",?,"Lopez","1951-08-07",S,F,"heidi19@adventure-works.com",40000,2,0,"Partial College","Clerical",0,2,"2005-08-20","5-10 Miles","Pacific",61,1
+11053,359,"Ana","E","Price","1980-08-20",M,F,"ana0@adventure-works.com",60000,0,0,"Partial College","Skilled Manual",0,2,"2007-07-21","1-2 Miles","North America",32,1
+11054,34,"Deanna",?,"Munoz","1952-03-10",M,F,"deanna33@adventure-works.com",40000,2,0,"Partial College","Skilled Manual",1,2,"2005-08-06","5-10 Miles","Pacific",60,1
+11055,22,"Gilbert",?,"Raje","1952-03-05",M,M,"gilbert35@adventure-works.com",40000,2,0,"Partial College","Skilled Manual",1,2,"2005-08-03","5-10 Miles","Pacific",60,1
+11056,10,"Michele","L","Nath","1953-04-03",M,F,"michele19@adventure-works.com",40000,3,0,"Partial College","Skilled Manual",1,2,"2005-08-29","5-10 Miles","Pacific",59,1
+11057,5,"Carl","J","Andersen","1953-10-12",M,M,"carl12@adventure-works.com",70000,2,0,"Graduate Degree","Management",1,2,"2005-08-25","1-2 Miles","Pacific",59,1
+11058,29,"Marc",?,"Diaz","1954-04-27",M,M,"marc6@adventure-works.com",80000,2,0,"Partial College","Skilled Manual",1,2,"2005-09-09","1-2 Miles","Pacific",58,1
+11059,27,"Ashlee","J","Andersen","1954-04-01",S,F,"ashlee19@adventure-works.com",80000,2,0,"Partial College","Skilled Manual",1,2,"2007-08-22","5-10 Miles","Pacific",58,0
+11060,40,"Jon","L","Zhou","1954-03-17",M,M,"jon28@adventure-works.com",80000,2,0,"Partial College","Skilled Manual",1,2,"2005-09-19","5-10 Miles","Pacific",58,1
+11061,23,"Todd","M","Gao","1954-02-27",M,M,"todd14@adventure-works.com",80000,2,0,"Partial College","Skilled Manual",1,2,"2005-09-13","5-10 Miles","Pacific",58,1
+11062,547,"Noah","D","Powell","1975-09-02",M,M,"noah5@adventure-works.com",40000,0,0,"High School","Skilled Manual",1,2,"2007-07-11","5-10 Miles","North America",37,1
+11063,634,"Angela",?,"Murphy","1975-04-07",S,F,"angela41@adventure-works.com",40000,0,0,"High School","Skilled Manual",1,2,"2007-07-16","5-10 Miles","North America",37,1
+11064,315,"Chase",?,"Reed","1975-12-07",M,M,"chase21@adventure-works.com",40000,0,0,"High School","Skilled Manual",1,2,"2007-07-29","5-10 Miles","North America",36,1
+11065,331,"Jessica",?,"Henderson","1973-10-09",M,F,"jessica29@adventure-works.com",60000,0,0,"Partial College","Skilled Manual",0,2,"2007-08-14","1-2 Miles","North America",39,0
+11066,543,"Grace","T","Butler","1973-11-27",M,F,"grace62@adventure-works.com",70000,0,0,"Partial College","Professional",1,2,"2007-12-02","5-10 Miles","North America",38,0
+11067,632,"Caleb","F","Carter","1976-09-25",S,M,"caleb40@adventure-works.com",60000,0,0,"Partial College","Professional",1,2,"2008-02-19","5-10 Miles","North America",36,0
+11068,40,"Tiffany",?,"Liang","1955-09-23",S,F,"tiffany17@adventure-works.com",80000,2,0,"High School","Skilled Manual",1,2,"2007-11-01","5-10 Miles","Pacific",57,0
+11069,23,"Carolyn",?,"Navarro","1955-09-21",S,F,"carolyn30@adventure-works.com",80000,2,0,"High School","Skilled Manual",0,2,"2005-10-18","1-2 Miles","Pacific",57,1
+11070,39,"Willie","T","Raji","1955-04-05",M,M,"willie40@adventure-works.com",80000,2,0,"High School","Skilled Manual",1,2,"2005-10-29","5-10 Miles","Pacific",57,1
+11071,24,"Linda",?,"Serrano","1955-06-26",S,F,"linda31@adventure-works.com",80000,2,0,"High School","Skilled Manual",1,2,"2007-09-02","5-10 Miles","Pacific",57,0
+11072,17,"Casey",?,"Luo","1955-02-06",S,F,"casey6@adventure-works.com",80000,2,0,"High School","Skilled Manual",0,2,"2005-10-01","1-2 Miles","Pacific",57,1
+11073,16,"Amy",?,"Ye","1956-08-14",S,F,"amy16@adventure-works.com",70000,2,0,"High School","Skilled Manual",1,2,"2007-09-24","5-10 Miles","Pacific",56,0
+11074,28,"Levi","A","Arun","1956-08-28",S,M,"levi6@adventure-works.com",70000,2,0,"High School","Skilled Manual",1,2,"2007-09-24","5-10 Miles","Pacific",56,0
+11075,32,"Felicia","L","Jimenez","1957-11-16",S,F,"felicia4@adventure-works.com",80000,2,0,"High School","Professional",1,2,"2005-10-29","5-10 Miles","Pacific",54,1
+11076,19,"Blake",?,"Anderson","1957-07-13",S,M,"blake9@adventure-works.com",80000,2,0,"High School","Professional",1,2,"2005-10-22","5-10 Miles","Pacific",55,1
+11077,36,"Leah",?,"Ye","1957-09-19",S,F,"leah7@adventure-works.com",80000,2,0,"High School","Professional",0,2,"2005-10-16","1-2 Miles","Pacific",55,1
+11078,49,"Gina","E","Martin","1974-01-10",S,F,"gina1@adventure-works.com",40000,0,0,"High School","Professional",0,2,"2007-08-19","1-2 Miles","North America",38,0
+11079,34,"Donald",?,"Gonzalez","1959-03-11",S,M,"donald20@adventure-works.com",160000,0,0,"Graduate Degree","Management",1,2,"2007-09-16","0-1 Miles","Pacific",53,0
+11080,30,"Damien",?,"Chander","1959-07-17",M,M,"damien32@adventure-works.com",170000,0,0,"Graduate Degree","Management",1,2,"2005-10-11","0-1 Miles","Pacific",53,1
+11081,311,"Savannah","C","Baker","1966-07-24",M,F,"savannah39@adventure-works.com",120000,2,2,"Bachelors","Management",1,3,"2007-08-16","2-5 Miles","North America",46,0
+11082,322,"Angela","L","Butler","1966-08-04",S,F,"angela17@adventure-works.com",130000,0,1,"Graduate Degree","Management",0,3,"2007-07-26","1-2 Miles","North America",46,1
+11083,336,"Alyssa","F","Cox","1966-03-15",M,F,"alyssa37@adventure-works.com",130000,0,1,"Graduate Degree","Management",1,3,"2007-07-10","1-2 Miles","North America",46,1
+11084,543,"Lucas",?,"Phillips","1957-09-12",S,M,"lucas7@adventure-works.com",80000,2,0,"Partial High School","Skilled Manual",0,2,"2007-07-08","1-2 Miles","North America",55,1
+11085,345,"Emily",?,"Johnson","1957-07-19",S,F,"emily1@adventure-works.com",60000,2,0,"High School","Professional",0,2,"2008-06-08","5-10 Miles","North America",55,0
+11086,369,"Ryan",?,"Brown","1957-12-23",M,M,"ryan43@adventure-works.com",70000,2,1,"Partial College","Professional",1,0,"2008-01-03","0-1 Miles","North America",54,0
+11087,307,"Tamara","L","Liang","1957-10-03",M,F,"tamara6@adventure-works.com",70000,3,2,"Partial College","Professional",0,0,"2007-08-29","0-1 Miles","North America",55,0
+11088,359,"Hunter",?,"Davis","1957-11-25",M,M,"hunter64@adventure-works.com",80000,2,1,"Bachelors","Management",1,0,"2007-07-17","2-5 Miles","North America",54,1
+11089,337,"Abigail","M","Price","1957-02-05",S,F,"abigail25@adventure-works.com",80000,2,1,"Bachelors","Management",1,1,"2007-07-02","2-5 Miles","North America",55,1
+11090,338,"Trevor",?,"Bryant","1957-12-17",S,M,"trevor18@adventure-works.com",90000,2,0,"Partial College","Professional",1,1,"2006-02-07","2-5 Miles","North America",54,1
+11091,50,"Dalton",?,"Perez","1957-04-04",M,M,"dalton37@adventure-works.com",90000,2,0,"Partial College","Professional",1,1,"2007-08-02","5-10 Miles","North America",55,0
+11092,22,"Cheryl","A","Diaz","1967-05-06",M,F,"cheryl4@adventure-works.com",90000,2,2,"Bachelors","Professional",1,0,"2005-10-09","1-2 Miles","Pacific",45,1
+11093,19,"Aimee","A","He","1967-09-10",M,F,"aimee13@adventure-works.com",100000,0,0,"Graduate Degree","Management",1,0,"2005-10-08","0-1 Miles","Pacific",45,1
+11094,33,"Cedric","W","Ma","1962-04-01",S,M,"cedric15@adventure-works.com",70000,1,0,"Partial College","Skilled Manual",0,1,"2007-10-09","0-1 Miles","Pacific",50,0
+11095,13,"Chad",?,"Kumar","1962-09-01",S,M,"chad9@adventure-works.com",70000,1,0,"Partial College","Skilled Manual",1,1,"2005-10-02","5-10 Miles","Pacific",50,1
+11096,12,"Andrés",?,"Anand","1962-08-10",M,M,"andrés18@adventure-works.com",60000,1,0,"Bachelors","Professional",1,1,"2005-10-12","5-10 Miles","Pacific",50,1
+11097,40,"Edwin","R","Nara","1961-10-27",M,M,"edwin39@adventure-works.com",60000,1,0,"Partial College","Skilled Manual",1,1,"2005-10-05","5-10 Miles","Pacific",51,1
+11098,14,"Mallory","S","Rubio","1961-05-01",S,F,"mallory7@adventure-works.com",60000,1,0,"Partial College","Skilled Manual",0,1,"2007-08-15","0-1 Miles","Pacific",51,0
+11099,13,"Adam",?,"Ross","1961-03-08",M,M,"adam2@adventure-works.com",60000,1,0,"Bachelors","Professional",1,1,"2005-10-08","0-1 Miles","Pacific",51,1

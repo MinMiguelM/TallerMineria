@@ -252,7 +252,7 @@ public class ArffFile {
         } catch (Exception ex) {
             Logger.getLogger(ArffFile.class.getName()).log(Level.SEVERE, null, ex);
         }
-        //saveToFile(4);
+        //saveToFile("4");
     }
     
     /**
@@ -262,11 +262,11 @@ public class ArffFile {
      */
     public void replaceValues(Instances uniqueAttribute, List<Integer> attributes){
         for (int i = 0; i < instancesFilter.numInstances(); i++) {
-            for (Integer attribute : attributes) {
-                if(instancesFilter.attribute(attribute).isNumeric())
-                    instancesFilter.instance(i).setValue(attribute, Double.parseDouble(uniqueAttribute.instance(i).toString(attribute)));
+            for (int j = 0;j<attributes.size();j++) {
+                if(instancesFilter.attribute(attributes.get(j)).isNumeric())
+                    instancesFilter.instance(i).setValue(attributes.get(j), Double.parseDouble(uniqueAttribute.instance(i).toString(j)));
                 else
-                    instancesFilter.instance(i).setValue(attribute, uniqueAttribute.instance(i).toString(attribute));
+                    instancesFilter.instance(i).setValue(attributes.get(j), uniqueAttribute.instance(i).toString(j));
             }
         }
     }
