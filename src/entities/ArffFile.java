@@ -147,7 +147,7 @@ public class ArffFile {
         } else {
             throw new Exception("EL ATRIBUTO: " + instancesFilter.attribute(attribute).name() + " NO ES NOMINAL");
         }
-        saveToFile(2);
+        //saveToFile(2);
     }
 
     /**
@@ -192,7 +192,7 @@ public class ArffFile {
         for (int i = 0; i < instancesFilter.numInstances(); i++) {
             instancesFilter.instance(i).setValue(instancesFilter.numAttributes() - 1, newValues.get(i));
         }
-        saveToFile(3);
+        //saveToFile(3);
         return true;
     }
 
@@ -212,43 +212,47 @@ public class ArffFile {
         //instancesFilter = new Instances(instances);
         SimpleKMeans kMeans;
         kMeans = new SimpleKMeans();
-        Instances uniqueAttribute;
+        Instances uniqueAttributes;
+        uniqueAttributes = new Instances(instancesFilter);
+        List<String> names = new ArrayList<>();
         int i = 0;
         for (Integer attribute : attributes) {
-            uniqueAttribute = new Instances(instances);
-            String name = new String(instances.attribute(attribute).name());
-            if(instances.attribute(attribute).isDate() || instances.attribute(attribute).isString())
+            String name = new String(instancesFilter.attribute(attribute).name());
+            if(instancesFilter.attribute(attribute).isDate() || instancesFilter.attribute(attribute).isString())
                 throw new Exception("No se puede hacer cluster con atributos de tipo DATE o STRING");
-            i=0;
-            while(uniqueAttribute.numAttributes()!=1){
-                if(!name.equals(uniqueAttribute.attribute(i).name()))
-                    uniqueAttribute.deleteAttributeAt(i);
-                else
-                    i++;
-            }
-            try {
-                kMeans.setNumClusters(numCluster);
-                kMeans.setMaxIterations(maxIterations);
-                kMeans.setSeed(seed);
-                kMeans.setDisplayStdDevs(false);
-                kMeans.setDistanceFunction(df);
-                kMeans.setDontReplaceMissingValues(replaceMissingValues);
-                kMeans.setPreserveInstancesOrder(preserveInstancesOrder);
-                kMeans.buildClusterer(uniqueAttribute);
-                for (int j = 0; j < uniqueAttribute.numInstances(); j++) {
-                    if(uniqueAttribute.attribute(0).isNumeric())
-                        uniqueAttribute.instance(j).setValue(0, Double.parseDouble(kMeans.getClusterCentroids().instance
-                                (kMeans.clusterInstance(uniqueAttribute.instance(j))).toString()));
-                    else
-                        uniqueAttribute.instance(j).setValue(0, kMeans.getClusterCentroids().instance
-                                (kMeans.clusterInstance(uniqueAttribute.instance(j))).toString());
-                }
-                replaceValues(uniqueAttribute,attribute);
-            } catch (Exception ex) {
-                Logger.getLogger(ArffFile.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            names.add(name);
         }
-        saveToFile(4);
+        while(uniqueAttributes.numAttributes()!=attributes.size()){
+            if(!names.contains(uniqueAttributes.attribute(i).name()))
+                uniqueAttributes.deleteAttributeAt(i);
+            else
+                i++;
+        }
+        try {
+            kMeans.setNumClusters(numCluster);
+            kMeans.setMaxIterations(maxIterations);
+            kMeans.setSeed(seed);
+            kMeans.setDisplayStdDevs(false);
+            kMeans.setDistanceFunction(df);
+            kMeans.setDontReplaceMissingValues(replaceMissingValues);
+            kMeans.setPreserveInstancesOrder(preserveInstancesOrder);
+            kMeans.buildClusterer(uniqueAttributes);
+            //System.out.println(kMeans);
+            for (int j = 0; j < uniqueAttributes.numInstances(); j++) {
+                int cluster = kMeans.clusterInstance(uniqueAttributes.instance(j));
+                for (int k = 0; k < uniqueAttributes.numAttributes(); k++) {
+                    if(uniqueAttributes.attribute(k).isNumeric())
+                        uniqueAttributes.instance(j).setValue(k, Double.parseDouble(kMeans.getClusterCentroids().instance
+                                    (cluster).toString(k)));
+                    else
+                        uniqueAttributes.instance(j).setValue(k, kMeans.getClusterCentroids().instance(cluster).toString(k));
+                }
+            }
+            replaceValues(uniqueAttributes,attributes);
+        } catch (Exception ex) {
+            Logger.getLogger(ArffFile.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //saveToFile(4);
     }
     
     /**
@@ -256,12 +260,14 @@ public class ArffFile {
      * A instancesFilter para luego ser exportado en archivo arff
      * @param uniqueAttribute 
      */
-    public void replaceValues(Instances uniqueAttribute, int attribute){
+    public void replaceValues(Instances uniqueAttribute, List<Integer> attributes){
         for (int i = 0; i < instancesFilter.numInstances(); i++) {
-            if(instancesFilter.attribute(attribute).isNumeric())
-                instancesFilter.instance(i).setValue(attribute, Double.parseDouble(uniqueAttribute.instance(i).toString(0)));
-            else
-                instancesFilter.instance(i).setValue(attribute, uniqueAttribute.instance(i).toString(0));
+            for (Integer attribute : attributes) {
+                if(instancesFilter.attribute(attribute).isNumeric())
+                    instancesFilter.instance(i).setValue(attribute, Double.parseDouble(uniqueAttribute.instance(i).toString(attribute)));
+                else
+                    instancesFilter.instance(i).setValue(attribute, uniqueAttribute.instance(i).toString(attribute));
+            }
         }
     }
 
@@ -283,11 +289,11 @@ public class ArffFile {
         }
         String oldName = new String(instancesFilter.attribute(attribute).name());
             instancesFilter.deleteAttributeAt(attribute);
-            instancesFilter.insertAttributeAt(new Attribute(oldName, values), instancesFilter.numAttributes());
+            instancesFilter.insertAttributeAt(new Attribute(oldName, values), attribute);
         for (int i = 0; i < instancesFilter.numInstances(); i++) {
-            instancesFilter.instance(i).setValue(instancesFilter.numAttributes() - 1, newValues.get(i));
+            instancesFilter.instance(i).setValue(attribute , newValues.get(i));
         }
-        saveToFile(5);
+        //saveToFile(5);
     }
 
     /**
@@ -295,11 +301,11 @@ public class ArffFile {
      *
      * @param filterNumber
      */
-    private void saveToFile(int filterNumber) {
+    private void saveToFile(String nameFile) {
         try {
             ArffSaver saver = new ArffSaver();
             saver.setInstances(instancesFilter);
-            saver.setFile(new File("filter" + filterNumber + ".arff"));
+            saver.setFile(new File(nameFile + ".arff"));
             saver.writeBatch();
         } catch (IOException ex) {
             Logger.getLogger(ArffFile.class.getName()).log(Level.SEVERE, null, ex);
@@ -369,14 +375,42 @@ public class ArffFile {
         }
     }
     
-    public void generalizacionMicroAgregacion(int k, List<Integer> attributes){
+    /**
+     * Los dos primeros parámetros hacen referencia al aseguramiento del K,
+     * los demas, son los necesarios para poder hacer el filtro de 
+     * microAgregacion
+     */
+    public void generalizacionMicroAgregacion(int k, List<Integer> attributes,DistanceFunction df, int numCluster, 
+            int seed, int maxIterations,boolean replaceMissingValues, boolean preserveInstancesOrder) throws Exception{
         instancesFilter = new Instances(instances);
+        boolean firstTime = true;
         while(!revisionDelK(k, attributes)){
-            //microAgregacion(null, k, k, k, true, true, attributes);
-            
+            if (firstTime){
+                microAgregacion(df, numCluster, seed, maxIterations, replaceMissingValues, preserveInstancesOrder, attributes);
+                firstTime = false;
+            }else{
+                List< Map.Entry< String, Integer > > map=findPseudoIdentifiers(attributes);
+                int max=0;
+                String identificadorMax="";
+                for (Map.Entry<String, Integer> map1 : map) {
+                    if(map1.getValue()>max)
+                    {
+                        max=map1.getValue();
+                        identificadorMax=map1.getKey();
+                    }
+                }
+                int idMax=Integer.parseInt(identificadorMax);
+                supresor(idMax);
+                firstTime = true;
+            }
         }
+        saveToFile("10");
     }
     
+    /**
+     * Revisa que el k se cumpla segun la lista de cuasi identificadores
+     * retornando verdadero si cumple el k o falso si no lo cumple.
+     */
     public boolean revisionDelK(int k, List<Integer> attributes){
         Map<String,Integer > map = new HashMap<>();
         for(int i = 0; i < instancesFilter.numInstances();i++){
@@ -384,12 +418,15 @@ public class ArffFile {
             for (Integer attribute : attributes) {
                 pseudos += instancesFilter.instance(i).toString(attribute);
             }
-            System.out.println(pseudos);
+            //System.out.println(pseudos);
             if(!map.containsKey(pseudos))
                 map.put(pseudos, 1);
             else
                 map.put(pseudos,map.get(pseudos)+1);
         }
+        System.out.println("------------------------------------------------");
+        System.out.println(map);
+        System.out.println("------------------------------------------------");
         Set<String> set = map.keySet();
         for(String s : set){
             if(map.get(s) < k)
@@ -415,5 +452,3 @@ public class ArffFile {
         }
     }
 }
-
-
