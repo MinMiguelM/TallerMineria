@@ -93,7 +93,7 @@ public class ArffFile {
                 String palabra = line.replace("\t", "");
                 int tam = line.length() - palabra.length();
                 Taxonomia tax = new Taxonomia(palabra, null);
-                if (tam == 0) {
+                if ( tam == 0 ) {
                     taxonomias.add(tax);
                     indice++;
                 } else {
@@ -124,6 +124,43 @@ public class ArffFile {
                 String generalizar = null;
                 for (int j = 0; j < taxonomias.size(); j++) {
                     String temp = taxonomias.get(j).generalizar(palabrita);
+                    if (temp != null) {
+                        generalizar = temp;
+                    }
+                }
+                if (generalizar == null) {
+                    throw new Exception("PALABRA NO ENCONTRADA EN LA TAXONOMÍA: " + palabrita);
+                }
+                if (!values.contains(generalizar)) {
+                    values.addElement(generalizar);
+                }
+                newValues.add(generalizar);
+
+                ///AHORA SI TENGO EL RES
+            }
+            String oldName = new String(instancesFilter.attribute(attribute).name());
+            instancesFilter.deleteAttributeAt(attribute);
+            instancesFilter.insertAttributeAt(new Attribute(oldName, values), instancesFilter.numAttributes());
+            for (int i = 0; i < instancesFilter.numInstances(); i++) {
+                instancesFilter.instance(i).setValue(instancesFilter.numAttributes() - 1, newValues.get(i));
+            }
+        } else {
+            throw new Exception("EL ATRIBUTO: " + instancesFilter.attribute(attribute).name() + " NO ES NOMINAL");
+        }
+        //saveToFile(2);
+    }
+    
+    public void generalizarPunto2PorNivel( int attribute , String archivo , int nivel ) throws Exception {
+        //instancesFilter = new Instances(instances);
+        ArrayList<Taxonomia> taxonomias = leerTaxonomia(archivo);
+        FastVector values = new FastVector();
+        List<String> newValues = new ArrayList<>();
+        if (instancesFilter.attribute(attribute).type() == weka.core.Attribute.NOMINAL) {
+            for (int i = 0; i < instancesFilter.numInstances(); i++) {
+                String palabrita = instancesFilter.instance(i).toString(attribute);
+                String generalizar = null;
+                for (int j = 0; j < taxonomias.size(); j++) {
+                    String temp = taxonomias.get(j).generalizar(palabrita , nivel);
                     if (temp != null) {
                         generalizar = temp;
                     }

@@ -68,5 +68,25 @@ public class Taxonomia {
         }
         return null;
     }
+
+    String generalizar(String palabrita, int nivel) {
+        nivel = nivel - 1;
+        if(nombre.equals(palabrita)){
+           
+            if( nivel >= 0  && padre != null ){
+                return padre.getNombre();
+            }
+            else if( nivel < 0 ){
+                return palabrita;
+            }else{
+                return nombre;
+            }
+        }else{
+            if(padre!=null){
+                return padre.generalizar( palabrita , nivel );
+            }
+            return null;
+        }
+    }
     
 }
