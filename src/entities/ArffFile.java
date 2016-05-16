@@ -369,7 +369,12 @@ public class ArffFile {
     
     public void generalizacionSupresion(List<Integer> attributes, int k, Map<Integer,String> attTaxonomia) throws Exception{
         instancesFilter = new Instances(instances);
-        int numGeneralizar=1;
+        Map< Integer , Integer > mapaPunto2 = new HashMap<>();
+        Map< Integer , Integer > mapaGeneralizar = new HashMap< Integer ,  Integer >();
+        for(Integer atributo : attributes) {
+            mapaPunto2.put( atributo , 1 );
+            mapaGeneralizar.put( atributo , 1 );
+        }
         while(!revisionDelK(k, attributes))
         {
           
@@ -386,8 +391,8 @@ public class ArffFile {
             int idMax=Integer.parseInt(identificadorMax);
             if (instancesFilter.attribute(idMax).type() == weka.core.Attribute.NUMERIC) 
             {
-                if(generalizar(idMax,numGeneralizar))
-                    numGeneralizar++;
+                if(generalizar( idMax , mapaGeneralizar.get( idMax ) ))
+                    mapaGeneralizar.put( idMax , mapaGeneralizar.get( idMax )  + 1 ); 
                 else
                     supresor(idMax);
             }
@@ -397,16 +402,15 @@ public class ArffFile {
                     
                         if(attTaxonomia.containsKey(idMax)){
                             //MIRAR PRIMERO EL PAPA SINO FUNCIONA ENTONCES CON EL ABUELO PARA EVITAR PERDER INFO
-                            generalizarpunto2(idMax, attTaxonomia.get(idMax));
-                            // try - catch
+                            generalizarPunto2PorNivel(idMax, attTaxonomia.get(idMax), mapaPunto2.get(idMax));
+                            mapaPunto2.put( idMax , mapaPunto2.get(idMax) + 1);
                         }
-                        else{
-                               if(generalizar(idMax,numGeneralizar))
-                                   numGeneralizar++;
-                               else
-                                   supresor(idMax);
-                               
-                        }       
+                        else if (generalizar(idMax, mapaGeneralizar.get(idMax))) {
+                            mapaGeneralizar.put(idMax, mapaGeneralizar.get(idMax) + 1);
+                        } else {
+                            supresor(idMax);
+                        }
+                              
                 }
             }
         }
